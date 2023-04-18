@@ -2,5 +2,9 @@
 pragma solidity ^0.8.13;
 
 contract Counter {
-  enum mySpace {VALUE1, VALUE2, VALUE3}
+    enum mySpace {
+        VALUE1,
+        VALUE2,
+        VALUE3
+    }
 }

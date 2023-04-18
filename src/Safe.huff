@@ -1,0 +1,43 @@
+/// @title Safe-contracts
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev
+/// @notice safe-contracts Implementation in Huff
+/// @notice Adapted from safe-contracts(https://github.com/safe-global/safe-contracts/blob/main/contracts/Safe.sol)
+/// @notice All Enum params were replaced by uint8, they are both represented by 1 and 2, 1 for call and 2 for delegate call 
+
+/**                                                         CONSTANTS                                                                              **/
+#define constant VERSION = "1.4.0"
+#define constant DOMAIN_SEPERATOR_TYPEHASH = 0x47e79534a245952e8b16893a336b85a3d9ea9fa8c573f3d803afb92a79469218
+#define constant SAFE_TX_TYPEHASH = 0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8;
+
+/**                                                         STORAGES                                                                                **/
+#define constant nonce =  FREE_STORAGE_POINTER()
+#define constant _deprecatedDomainSeperator = FREE_STORAGE_POINTER()
+#define constant signedMessages = FREE_STORAGE_POINTER()
+#define constant approvedHashes = FREE_STORAGE_POINTER()
+
+/**                                                              EVENTS                                                                             **/
+#define event SafeSetup(address indexed initiator, address[] owners, uint256 threshold, address initializer, address fallbackHandler)
+#define event ApproveHash(bytes32 indexed approvedHash, address indexed owner)
+#define event SignMsg(bytes32 indexed msgHash)
+#define event ExecutionFailure(bytes32 indexed txHash, uint256 payment)
+#define event ExecutionSuccess(bytes32 indexed txHash, uint256 payment)
+
+/**                                                             INTERFACES                                                                         **/
+#define function setup(address[],uint256,address,bytes,address,address,uint256,address) nonpayable returns ()
+#define function execTransaction(address, uint256, bytes, uint8, uint256, uint256, uint256, address, address, bytes) returns (bool)
+#define function handlePayment(uint256, uint256, uint256, address, address) returns (uint256)
+#define function checkSignatures(bytes32, bytes, bytes) view returns()
+#define function checkNsignatures(bytes32, bytes, bytes, uint256) view returns()
+#define function approveHash(bytes32) returns()
+#define function getChainId() view returns(uint256)
+#define function domainSeparator() view returns(bytes32)
+#define function encodeTransactionData(address, uint256, bytes, uint8, uint256, uint256, uint256, address, address, uint256) view returns(bytes)
+#define function getTransactionHash(address, uint256, bytes, uint8, uint256, uint256, uint256, address, address, uint256) view returns(bytes32)
+
+/// @notice Constructor
+#define macro CONSTRUCTOR() =  takes() returns() {
+   0x20     //[size] - byte size to copy 
+   0x20 codesize sub //[offset, size] - oofset in the code to copy from
+   0x00 
+}

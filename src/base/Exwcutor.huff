@@ -1,0 +1,13 @@
+/// @title Executor-huff, a contract to execute transactions
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev
+/// @notice Executor-huff Implementation in Huff
+/// @notice this contract can't be deployed since it's meant to be abstract
+
+/**INTERFACES**/
+#define function execute(address, uint256, bytes, uint8, uint256) returns(bool) 
+
+/**FUNCTIONS**/
+#define macro execute() = takes(5) returns(1){
+    
+}
