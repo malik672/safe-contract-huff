@@ -1,0 +1,66 @@
+/// @title Executor-huff, a contract to execute transactions
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev // swap2                
+/// @notice Executor-huff Implementation in Huff
+
+// /**INTERFACES**/
+// #define function execute(address, uint256, bytes, uint8, uint256) payable returns(bool)//an internal function will be called from memory
+
+/**FUNCTIONS**/
+/// @dev uint8 parameters are used to represent ENUMS, if the value is 1 it's represents delegatecall else every other value is a call
+#define macro execute() = takes(5) returns(1){
+   // Input Stack:          // [address_to]
+   // input Stack:          // [number_value, address_to]
+   // input stack:          // [bytes_data, number_value, address_to]
+   // input stack:          // [enum_operation, bytes_data, number_value, address_to]
+   // input stack:          // [number_txgas, enum_operation, bytes_data, number_value, address_to]
+   swap1                    // [enum_operation, number_txgas, bytes_data, number_value, address_to]
+   0x01 eq                  // [0x01, enum_operation, number_txgas, bytes_data, number_value, address_to]
+   success                  // [sucess_label_pc, eq, number_txgas, bytes_data, number_value, address_to]
+   jump                     // [number_txgas, bytes_data, number_value, address_to]
+
+      0x00 0x00             // [0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
+      dup4                  // [bytes_data, 0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
+      0x20                  // [0x20, bytes_data, 0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
+      add                   // [added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value, address_to]
+      dup6                  // [address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value, address_to]
+      pop                   // [address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value]
+      dup6                  // [number_value, address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value]
+      pop                   // [number_value, address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data]
+      dup5 dup6             // [bytes_data, number_tx_gas, number_value, address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data]
+      pop pop               // [bytes_data, number_tx_gas, number_value, address_to,added_bytes_data,0x00,0x00]
+      mload                 // [load(bytes_data),number_txgas,number_value, address_to,added_bytes_data,0x00,0x00]
+      swap4                 // [added_bytes_data,number_txgas,number_value, address_to,load(bytes_data),0x00,0x00]
+      swap3                 // [address_to,number_txgas,number_value, added_bytes_data,load(bytes_data),0x00,0x00]
+      swap1                 // [number_txgas,address_to,number_value, added_bytes_data,load(bytes_data),0x00,0x00]
+      call                  // [result_call]
+      0x00                  // [0x00, result_delegate_call]
+      mstore                // []
+      0x20 0x00             // [0x00, 0x20]
+      return                // []
+
+   success:
+      0x00 0x00             // [0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
+      dup4                  // [bytes_data, 0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
+      0x20                  // [0x20, bytes_data, 0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
+      add                   // [added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value, address_to]
+      dup6                  // [address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value, address_to]
+      pop                   // [address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data, number_value]
+      pop                   // [address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data]
+      dup4 dup5             // [bytes_data, number_txgas, address_to,added_bytes_data,0x00,0x00 number_txgas, bytes_data]
+      pop pop               // [bytes_data, number_txgas, address_to,added_bytes_data,0x00,0x00]
+      mload                 // [load(bytes_data),number_txgas, address_to,added_bytes_data,0x00,0x00]
+      swap3                 // [added_bytes_data,number_txgas, address_to,load(bytes_data),0x00,0x00]
+      swap2                 // [address_to,number_txgas, added_bytes_data,load(bytes_data),0x00,0x00]
+      swap1                 // [number_txgas,address_to, added_bytes_data,load(bytes_data),0x00,0x00]
+      delegatecall          // [result_delegate_call]
+      0x00                  // [0x00, result_delegate_call]
+      mstore                // []
+      0x20 0x00             // [0x00, 0x20]
+      return                // []
+}
+
+
+#define macro MAIN() = takes (0) returns (0) {
+   execute()
+}
