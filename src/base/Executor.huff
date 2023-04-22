@@ -1,10 +1,10 @@
 /// @title Executor-huff, a contract to execute transactions
 /// @notice SPDX-License-Identifier: MIT
-/// @author Malik_dev // swap2                
+/// @author Malik_dev /      
 /// @notice Executor-huff Implementation in Huff
 
-// /**INTERFACES**/
-// #define function execute(address, uint256, bytes, uint8, uint256) payable returns(bool)//an internal function will be called from memory
+ /**INTERFACES**/
+ #define function execute(address, uint256, bytes, uint8, uint256) payable returns(bool)//an internal function will be called from memory
 
 /**FUNCTIONS**/
 /// @dev uint8 parameters are used to represent ENUMS, if the value is 1 it's represents delegatecall else every other value is a call
@@ -58,9 +58,4 @@
       mstore                // []
       0x20 0x00             // [0x00, 0x20]
       return                // []
-}
-
-
-#define macro MAIN() = takes (0) returns (0) {
-   execute()
 }

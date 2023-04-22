@@ -1,0 +1,22 @@
+/// @title SelfAuthorized-huff, a contract to authorize transactions
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev                 
+/// @notice SelfAuthorized-huff Implementation in Huff
+
+ /**INTERFACES**/
+#define function SelfAuthorized() nonpayable returns()
+
+/**FUNCTIONS**/
+/// @dev 
+#define macro SelfAuthorized() = takes(0) returns(0) {
+    caller                  //[caller]
+    address                 //[address, caller]
+    eq                      //[address == caller]
+    is_authorized jumpi     //[]
+
+    //Revert if sender is not authorized
+    0x4753303331 0x00 mstore //[]
+    0x20 0x00 revert
+
+    is_authorized:
+}
