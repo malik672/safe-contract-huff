@@ -1,0 +1,7 @@
+/// @title  NativeCurrencyPaymentFallback-huff - A contract that has a fallback to accept native currency payments.
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev /      
+/// @notice NativeCurrencyPaymentFallback-huff implementation in huff
+
+ /**INTERFACES**/
+#define event  NativeCurrencyPaymentFallback() payable returns()
