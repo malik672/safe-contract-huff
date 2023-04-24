@@ -27,16 +27,30 @@
     10000 gas sub            // [sub_value,address_token,0x00,added_data,loaded_data, 0x00, 0x20,e,t]
     pop pop                  // [sub_value,address_token,0x00,added_data,loaded_data, 0x00, 0x20]
     call                     // [call_result]
-    returndatasize           // [data_size, call_result]
-    0x00 eq                  // [eq_result, data_size< call_result]
-    CASE1                    // [CASE1_label_pc, eq_result, data_size< call_result]
-    jump                     // [eq_result, data_size< call_result]
-    0x20                     // [eq]
+    returndatasize dup1      // [data_size, data_size, call_result]
+    0x00 eq                  // [data_size, data_size, call_result]
+    CASE1                    // [CASE1_label_pc, data_size, call_result]
+    jumpi                    // [data_size, call_result]
+    dup1                     // [data_size,data_size,call_result]
+    0x20 eq                  // [0x20,data_size,data_size,call_result]
+    CASE2                    // [CASE2_label_pc, data_size, call_result]  
+    jumpi                    // [data_size, call_result]
+    pop pop                  // []
+    0x00 0x00 return         // []
+
+
+    CASE2:
+        swap1                //[call_result, data_size]
+        iszero               //[iszero_call_result, data_size]
+        0x00 mload iszero    //[iszero_mload_0, iszero_call_result, data_size]
+        or iszero pop        //[iszero_or_result]
+        0x00 mstore          //[]
+        0x00 0x20 return     //[]
 
     CASE1:
-        swap2                // [call_result, data_size, eq_result]
-        0x00 mstore          // [data_size, eq_result]
-        pop pop              // []
-        0x00 020 return      // []
+        swap2                // [call_result, data_size]
+        0x00 mstore          // [data_size]
+        pop                  // []
+        0x00 0x20 return     // []
 
 }

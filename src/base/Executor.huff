@@ -17,7 +17,7 @@
    swap1                    // [enum_operation, number_txgas, bytes_data, number_value, address_to]
    0x01 eq                  // [0x01, enum_operation, number_txgas, bytes_data, number_value, address_to]
    success                  // [sucess_label_pc, eq, number_txgas, bytes_data, number_value, address_to]
-   jump                     // [number_txgas, bytes_data, number_value, address_to]
+   jumpi                    // [number_txgas, bytes_data, number_value, address_to]
 
       0x00 0x00             // [0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
       dup4                  // [bytes_data, 0x00, 0x00, number_txgas, bytes_data, number_value, address_to]
