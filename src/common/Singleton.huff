@@ -1,0 +1,6 @@
+/// @title Singleton, Base for singleton contracts (should always be the first super contract)
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev                 
+/// @notice Singleton Implementation in Huff
+
+#define constant singleton = FREE_STORAGE_POINTER()

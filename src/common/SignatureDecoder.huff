@@ -1,0 +1,22 @@
+/// @title SignatureDecoder, a contract to authorize transactions
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev                 
+/// @notice SignatureDecoder Implementation in Huff
+
+ /**INTERFACES**/
+#define function SignatureDecoder(bytes32,uint256) nonpayable returns(uint8,bytes32,bytes32)
+
+/**FUNCTIONS**/
+/// @dev 
+#define macro SignatureDecoder() = takes(2) returns(3) {
+   //input stack:        //[bytes32_sigs]
+   //input stack:        //[uint256, bytes32_sigs]
+   0x41 mul              //[signature_pos,bytes32_sigs]
+   0x20 dup2             //[signature_pos, 0x20, signature_pos, bytes32_sigs]
+   add  dup3 add mload   //[r,signature_pos, bytes32_sigs]
+   swap2                 //[bytes32_sigs,signature_pos, r]
+   0x40 dup3 add dup2 add mload //[s,bytes32_sigs, signature_pos,r]
+   swap2                 //[signature_pos, bytes32_sigs, s,r]
+   0x41 add add mload and //[v,s,r]
+   
+}

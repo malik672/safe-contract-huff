@@ -1,0 +1,46 @@
+/// @title A generic base huff contract that allows callers to access all internal storage.
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev                 
+/// @notice See https://github.com/gnosis/util-contracts/blob/bb5fe5fb5df6d8400998094fb1b32a178a47c3a1/contracts/StorageAccessible.sol
+
+#define function getStorageAt(uint256, uint256) view returns(bytes)
+#define function stimulateAndRevert(address, bytes) returns()
+
+#define macro getStorageAt() = takes(2) returns(1) {
+   // Input Stack:     //[uint_offset]
+   // Input Stack:     //[uint_length, uint_offset]
+   dup1 0x20 mul swap1 //[uint_length,result,uint_offset]
+   0x00 dup2 0x00 lt   //[0x00,uint_length,index,unit_length,result,uint_offset]
+   LOOP_BEGIN dup1     //[LOOP_PC,LOOP_PC,index,unit_length,result,uint_offset]    
+   jumpi               //[LOOP_PC,index,unit_length,result,uint_offset]    
+    swap3 swap4        //[LOOP_PC,index,unit_length,uint_offset,result]
+    pop pop pop pop    //[result]
+    0x00 mstore        //[]
+    0x00 0x20 return   //[]
+   
+   LOOP_BEGIN:         //[LOOP_PC,index, uint_length,result,uint_offset]
+     dup5 dup3         //[uint_offset,index,LOOP_PC,index, uint_length,result,uint_offset]
+     add sload         //[word,LOOP_PC,index, uint_length,result,uint_offset]
+     dup5 0x20 add     //[a---dded_result,word,LOOP_PC,index, uint_length,result,uint_offset]
+     dup4 0x20 mul     //[mul_result,added_result,word,LOOP_PC,index, uint_length,result,uint_offset]
+     add mstore        //[LOOP_PC,index, uint_length,result,uint_offset]
+     swap1 0x01 add    //[index,LOOP_PC, uint_length,result,uint_offset]
+     swap1 0x02 sub    //[LOOP_PC,index, uint_length,result,uint_offset]
+     jumpi             //[index, uint_length,result,uint_offset]
+}
+ 
+#define macro stimulateAndRevert() = takes(2) returns() {
+  // Input Stack:     //[address]
+  // Input Stack:     //[bytes_load, address_target]
+  0x00 0x00           //[0x00, 0x00, bytes_load, address_target]
+  dup3 mload          //[loaded_bytes, 0x00, 0x00,bytes_load, address_target]
+  dup4 0x20 add       //[added_bytes_load, loaded_bytes, 0x00, 0x00, bytes_load, address_target]
+  dup6 gas            //[gas, address_target, added_bytes_load,loaded_bytes, 0x00, 0x00, bytes_load, address_target]
+  delegatecall        //[call_result,bytes_load, address_target]
+  swap2               //[address_target,bytes_load,call_result]
+  pop pop             //[address_target]
+  0x00 mstore         //[]
+  returndatasize 0x20 mstore //[]
+  returndatasize 0x00 0x40 returndatacopy //[]
+  returndatasize 0x40 add 0x00 revert //[]
+}
