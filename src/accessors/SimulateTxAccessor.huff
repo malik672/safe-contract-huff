@@ -3,6 +3,14 @@
 /// @author Malik_dev /      
 /// @notice Executor-huff Implementation in Huff
 
+#include "./base/Executor.huff"
+
+/**STORAGE**/
+#define constant FREE_STORAGE = FREE_STORAGE_POINTER()
 
  /**INTERFACES**/
  #define function simulate(address, uint256, bytes, uint8) payable returns(bool)
+
+#define macro CONSTRUCTOR() = takes() returns() {
+    Executor.
+}
