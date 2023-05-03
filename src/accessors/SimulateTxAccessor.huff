@@ -6,11 +6,30 @@
 #include "./base/Executor.huff"
 
 /**STORAGE**/
-#define constant FREE_STORAGE = FREE_STORAGE_POINTER()
+#define constant accessorSingleton = FREE_STORAGE_POINTER()
 
- /**INTERFACES**/
- #define function simulate(address, uint256, bytes, uint8) payable returns(bool)
+/**INTERFACES**/
+#define function simulate(address, uint256, bytes, uint8) payable returns(bool)
+
+#define macro ONLY_DELEGATE_CALL() = takes(0) returns(0) {
+  address                //[address(this)]
+  0x00 sload             //[loaded_slot_0, address(this)]
+  eq success             //[sucess_pc, result] 
+  jumpi
+    0x00 0x00 revert     //[]
+
+  success:
+}
 
 #define macro CONSTRUCTOR() = takes() returns() {
-    Executor.
+  address 0x00          //[0x00, address(this)]
+  sstore                //[]
+}
+
+#define macro simulate() =  takes(4) returns(1) {
+    0NLY_DELEGATE_CALL()   //[]
+    //input stack:         //[to]
+    //input stack:         //[operation,data,value,to]
+    gas dup1               //[gas,gas,operation,data,value,to]
+    
 }
