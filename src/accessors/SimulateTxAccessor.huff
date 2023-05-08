@@ -26,7 +26,7 @@
   sstore                //[]
 }
 
-#define macro simulate() =  takes(4) returns(1) {
+#define macro simulate() =  takes(4) returns(3) {
     0NLY_DELEGATE_CALL()   //[]
     //input stack:         //[to]
     //input stack:         //[operation,data,value,to]
@@ -38,6 +38,16 @@
     swap1                  //[gas,call_result,to]
     gas                    //[gas_1,gas,call_result,to]
     swap1 sub              //[estimate,call_result,to]
-
-    
+    swap2 pop              //[call_result,estimate]
+    // Load free memory location
+    0x40 mload             //[ptr,call_result,estimate]
+    // We allocate memory for the return data by setting the free memory location to
+    // current free memory location + data size + 32 bytes for data size value
+    returndatasize 0x20 add//[sum_data,ptr,call_result,estimate]
+    dup2 add 0x40 mstore   //[ptr,call_result,estimate]
+    // Store the size
+    dup1 returndatasize mstore//[ptr,call_result,estimate]
+    // Store the data
+    returndatasize 0x00 0x20  //[0x20,0x00,data_size,ptr,call_result,estimate]
+    dup4 add returndatacopy   //[ptr,call_result,estimate]    
 }
