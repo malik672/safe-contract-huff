@@ -31,5 +31,13 @@
     //input stack:         //[to]
     //input stack:         //[operation,data,value,to]
     gas dup1               //[gas,gas,operation,data,value,to]
+    swap3 swap1            //[gas,data,operation,gas,value,to]
+    swap4                  //[value,data,operation,gas,gas,to]
+    dup6                   //[to,value,data,operation,gas,gas,to]
+    EXECUTE()              //[call_result,gas,to]
+    swap1                  //[gas,call_result,to]
+    gas                    //[gas_1,gas,call_result,to]
+    swap1 sub              //[estimate,call_result,to]
+
     
 }
