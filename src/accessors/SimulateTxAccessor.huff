@@ -1,7 +1,8 @@
-/// @title Executor-huff, a contract to execute transactions
+/// @title SimulateTxAccessor-huff, a contract to execute transactions
 /// @notice SPDX-License-Identifier: MIT
 /// @author Malik_dev /      
-/// @notice Executor-huff Implementation in Huff
+/// @notice Transactor simulator Implementation in Huff
+
 
 #include "./base/Executor.huff"
 

@@ -1,0 +1,17 @@
+/// @title FallbackManager-huff, a contract to execute transactions
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev /      
+/// @notice FallbackManager-huff Implementation in Huff
+
+#include "./common/SelfAuthorized.huff"
+
+#define event ChangedFallbackHandler(address indexed handler)
+
+/**STORAGE**/
+// keccak256("fallback_manager.handler.address")
+#define constant FALLBACK_HANDLER_STORAGE_SLOT = 0x6c9a6c4a39284e37ed1cf53d337577d14212a4870fb976a4366c693b939918d5;
+
+/**INTERFACES**/
+#define function internalSetFallbackHandler(address)
+#define function setFallbackHandler(address)
+#define function fallback()
