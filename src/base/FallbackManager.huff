@@ -5,7 +5,10 @@
 
 #include "./common/SelfAuthorized.huff"
 
-#define event ChangedFallbackHandler(address indexed handler)
+//Errors
+#define error Error(string)
+
+#define event ChangedFallbackHandler(address indexed)
 
 /**STORAGE**/
 // keccak256("fallback_manager.handler.address")
@@ -15,3 +18,20 @@
 #define function internalSetFallbackHandler(address)
 #define function setFallbackHandler(address)
 #define function fallback()
+
+#define macro internalSetFallbackHandler() = takes(1) returns(0){
+   //input stack          //[address_handler]
+   address dup1 eq        //[address_handler == address(this), address_handler]
+   is_address_this jumpi  //[address_handler]
+   0x00 0x00 revert
+
+   is_address_this:
+   0x00 sload sstore      //[]      
+}
+
+#define macro setFallbackHandler() takes(1) returns(0){
+    //input stack                //[address_handler]
+    dup1                         //[address_handler, address_handler]
+    internalSetFallbackHandler() //[address_handler]
+    emitChangedFallbackHandler(0x20)
+}
