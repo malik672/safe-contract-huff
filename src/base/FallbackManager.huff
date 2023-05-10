@@ -5,14 +5,15 @@
 
 #include "./common/SelfAuthorized.huff"
 
+/**STORAGE**/
+// keccak256("fallback_manager.handler.address")
+#define constant FALLBACK_HANDLER_STORAGE_SLOT = 0x6c9a6c4a39284e37ed1cf53d337577d14212a4870fb976a4366c693b939918d5;
+
+
 //Errors
 #define error Error(string)
 
 #define event ChangedFallbackHandler(address indexed)
-
-/**STORAGE**/
-// keccak256("fallback_manager.handler.address")
-#define constant FALLBACK_HANDLER_STORAGE_SLOT = 0x6c9a6c4a39284e37ed1cf53d337577d14212a4870fb976a4366c693b939918d5;
 
 /**INTERFACES**/
 #define function internalSetFallbackHandler(address)
@@ -34,4 +35,25 @@
     dup1                         //[address_handler, address_handler]
     internalSetFallbackHandler() //[address_handler]
     emitChangedFallbackHandler(0x20)
+}
+
+#define macro fallback() takes(0) returns(0){
+    0x00 sload                               //[slot]
+    sload                                    //[handler]
+    dup1 iszero success jumpi                //[pc_success, handler]
+    0x00 0x00 return                         //[handler]
+   
+    success:
+     calldatasize 0x00 0x00 calldatacopy     //[handler]
+     // The msg.sender address is shifted to the left by 12 bytes to remove the padding
+     // Then the address without padding is stored right after the calldata
+     96 caller shl calldatasize mstore       //[handler]
+     0x00 0x20 calldatasize add 0x00 0x00    //[0x00,0x00,added_size,0x00,handler]
+     gas 0x00 swap6 call                     //[call_result]    
+     returndatasize 0x00 0x00 returndatacopy //[call_result]
+     iszero TRUE jumpi                       //[]
+     returndatasize 0x00 revert              //[]
+
+       TRUE:
+        returndatasize 0x00 return           //[]    
 }
