@@ -1,0 +1,27 @@
+/// @title ModuleManager-huff, a contract to manage safe modules
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev /      
+/// @notice ModuleManager-huff Implementation in Huff
+
+#include "./common/SelfAuthorized.huff"
+#include "./Executor.huff"
+
+/**STORAGE**/
+// keccak256("fallback_manager.handler.address")
+#define constant SENTINEL_MODULES = 0X1;
+
+//Events
+#define event EnabledModule(address indexed);
+#define event DisabledModule(address indexed);
+#define event ExecutionFromModuleSuccess(address indexed);
+#define event ExecutionFromModuleFailure(address indexed);
+
+/**INTERFACES**/
+#define function setupModules(address, bytes);
+#define function enableModule(address);
+#define function disableModule(address, address);
+#define function exexFunctionFromModule(address,uint256,bytes,uint8) returns(bool);
+#define function execTransactionFromModuleReturnData(address,uint256,bytes,uint8) returns(bool, bytes);
+#define function isModuleEnables(address) view returns(bool);
+#define function getModulesPaginated(address, uint256) view returns(address[], address);
+#define function isContract(address) view returns(bool);

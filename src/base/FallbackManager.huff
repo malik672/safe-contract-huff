@@ -13,6 +13,7 @@
 //Errors
 #define error Error(string)
 
+//Events
 #define event ChangedFallbackHandler(address indexed)
 
 /**INTERFACES**/
