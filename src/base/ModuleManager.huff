@@ -33,6 +33,11 @@
 
 }
 
+/**
+* @notice Enables the module `module` for the Safe.
+* @dev This can only be done via a Safe transaction.
+* @param module Module to be whitelisted.
+*/
 #define macro ENABLEMODULE() takes(1) returns(0) {
     SELFAUTHORIZED()
     //input stack                     //[address_to]
@@ -61,7 +66,7 @@
         [SENTINEL_MODULES] sload 0x20 //[0x20,loaded_value,address_to]
         mstore dup1 0x40 0x00 sha3    //[slot,address_to,address_to]
         sstore                        //[address_to]
-        emit EnabledModule(0x20)      //[]
+        emitEnabledModule(0x20)      //[]
 
 
 
@@ -70,4 +75,48 @@
         0x4753313032 0x00 mstore      //[address_to]
         0x20 0x00 revert              //[address_to]
         pop                           //[]
+}
+
+/**
+* @notice Disables the module `module` for the Safe.
+* @dev This can only be done via a Safe transaction.
+* @param prevModule Previous module in the modules linked list.
+* @param module Module to be removed.
+*/
+#define macro DISABLEMODULE() takes(2) returns(0) {
+    SELFAUTHORIZED()
+    //input stack                    //[address_module, address_prevModule]
+    dup1 0x00 eq not                 //[not_result,address_module,address_prevModule]
+    dup2 [SENTINEL_MODULES] sload    //[loaded_result,address_module,not_result,address_module,address_prevModule]
+    eq not and TRUE jumpi            //[address_module,address_prevModule]
+      0x4753313031 0x00 mstore       //[address_module,address_prevModule]
+      0x20 0x00 revert               //[address_module,address_prevModule]
+
+    TRUE:
+      [modules] 0x00 mstore          //[address_module,address_prevModule]
+      dup2 0x20 mstore               //[address_module,address_prevModule]
+      0x40 0x00 sha3                 //[slot,address_module,address_prevModule]
+      sload dup2 eq TRUES jumpi      //[address_module,address_prevModule]  
+        0x4753313033 0x00 mstore     //[address_module,address_prevModule]  
+        0x20 0x00 revert             //[address_module,address_prevModule] 
+        pop pop                      //[] 
+
+        TRUES:
+          [modules] 0x00 mstore      //[address_module,address_prevModule]
+          dup2 0x20 mstore           //[address_module,address_prevModule]  
+          0x40 0x00 sha3             //[slot_prev,address_module,address_prevModule]
+          [modules] 0x00 mstore      //[slot_prev,address_module,address_prevModule]
+          dup2 0x20 mstore           //[slot_prev,address_module,address_prevModule]
+          0x40 0x00 sha3             //[slot_module,slot_prev,address_module,address_prevModule]
+          sload swap1 sstore         //[address_module,address_prevModule]
+          [modules] 0x00 mstore      //[address_module,address_prevModule]
+          dup1 0x20 mstore           //[address_module,address_prevModule]
+          0x40 0x00 sha3             //[slot,address_module,address_prevModule]
+          0x00 swap1 sstore          //[address_module,address_prevModule]
+          emitDisabledModule(0x20)   //[address_prevModule]
+          pop
+          
+
+
+
 }
