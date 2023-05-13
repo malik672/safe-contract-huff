@@ -7,8 +7,9 @@
 #include "./Executor.huff"
 
 /**STORAGE**/
-// keccak256("fallback_manager.handler.address")
 #define constant SENTINEL_MODULES = 0X1;
+
+#define constant modules = FREE_STORAGE_POINTER()
 
 //Events
 #define event EnabledModule(address indexed);
@@ -25,3 +26,48 @@
 #define function isModuleEnables(address) view returns(bool);
 #define function getModulesPaginated(address, uint256) view returns(address[], address);
 #define function isContract(address) view returns(bool);
+
+#define macro  SETUPMODULES() takes(2) returns(0) {
+   //input stack          //[address_to]
+   //input stack          //[address_to]
+
+}
+
+#define macro ENABLEMODULE() takes(1) returns(0) {
+    SELFAUTHORIZED()
+    //input stack                     //[address_to]
+    0x00 dup2                         //[address_to,0x00,address_to]
+    eq iszero dup2 [SENTINEL_MODULES] //[sentinel_slot,address_to,iszero_result,address_to]
+    sload eq iszero and iszero        //[iszero_result, address_to]
+    TRUE jumpi
+     [modules] 0x00 mstore            //[address_to]
+     dup1 0x20  mstore                //[address_to]
+     0x40 0x00 sha3 sload             //[loaded_value, address_to]
+     0x00 eq TRUES                    //[TRUESPC, address_to]
+     jumpi  
+       0x4753313032 0x00 mstore       //[address_to]
+       0x20 0x00 revert               //[address_to]
+       pop
+
+       TRUES:
+        [modules] 0x00 mstore         //[address_to]
+        dup1 0x20 mstore              //[address_to]
+        0x40 0x00 sha3                //[slot,address_to]
+        [modules] 0x00 mstore         //[slot,address_to]
+        [SENTINEL_MODULES] 0x20 sload //[loaded_value,slot,address_to]
+        0x40 0x00 sha3 sload          //[loaded_value,slot,address_to]
+        swap1 sstore                  //[address_to]
+        [modules] 0x00 mstore         //[address_to]
+        [SENTINEL_MODULES] sload 0x20 //[0x20,loaded_value,address_to]
+        mstore dup1 0x40 0x00 sha3    //[slot,address_to,address_to]
+        sstore                        //[address_to]
+        emit EnabledModule(0x20)      //[]
+
+
+
+
+      TRUE:
+        0x4753313032 0x00 mstore      //[address_to]
+        0x20 0x00 revert              //[address_to]
+        pop                           //[]
+}
