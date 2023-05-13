@@ -17,7 +17,7 @@
 #define function setFallbackHandler(address)
 #define function fallback()
 
-#define macro internalSetFallbackHandler() = takes(1) returns(0){
+#define macro INTERNALSETFALLBACKHANDLER() = takes(1) returns(0){
    //input stack          //[address_handler]
    address dup1 eq        //[address_handler == address(this), address_handler]
    is_address_this jumpi  //[address_handler]
@@ -27,14 +27,14 @@
    0x00 sload sstore      //[]      
 }
 
-#define macro setFallbackHandler() takes(1) returns(0){
+#define macro SETFALLBACKHANDLER() takes(1) returns(0){
     //input stack                //[address_handler]
     dup1                         //[address_handler, address_handler]
-    internalSetFallbackHandler() //[address_handler]
+    INTERNALSETFALLBACKHANDLER() //[address_handler]
     emitChangedFallbackHandler(0x20)
 }
 
-#define macro fallback() takes(0) returns(0){
+#define macro FALLBACK() takes(0) returns(0){
     0x00 sload                               //[slot]
     sload                                    //[handler]
     dup1 iszero success jumpi                //[pc_success, handler]

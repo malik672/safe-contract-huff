@@ -8,7 +8,7 @@
 
 /**FUNCTIONS**/
 /// @dev 
-#define macro SelfAuthorized() = takes(0) returns(0) {
+#define macro SELFAUTHORIZED() = takes(0) returns(0) {
     caller                  //[caller]
     address                 //[address, caller]
     eq                      //[address == caller]

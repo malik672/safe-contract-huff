@@ -6,7 +6,7 @@
 #define function getStorageAt(uint256, uint256) view returns(bytes)
 #define function stimulateAndRevert(address, bytes) returns()
 
-#define macro getStorageAt() = takes(2) returns(1) {
+#define macro GETSTORAGEAT() = takes(2) returns(1) {
    // Input Stack:     //[uint_offset]
    // Input Stack:     //[uint_length, uint_offset]
    dup1 0x20 mul swap1 //[uint_length,result,uint_offset]
@@ -29,7 +29,7 @@
      jumpi             //[index, uint_length,result,uint_offset]
 }
  
-#define macro stimulateAndRevert() = takes(2) returns() {
+#define macro STIMULATEANDREVERT() = takes(2) returns() {
   // Input Stack:     //[address]
   // Input Stack:     //[bytes_load, address_target]
   0x00 0x00           //[0x00, 0x00, bytes_load, address_target]
