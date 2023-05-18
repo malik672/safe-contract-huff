@@ -1,0 +1,28 @@
+/// @title ModuleManager-huff, a contract to manage safe modules
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev /      
+/// @notice ModuleManager-huff Implementation in Huff
+
+#include "./common/SelfAuthorized.huff"
+
+/**STORAGE**/
+#define constant SENTINEL_OWNERS = 0x1;
+#define constant owners = FREE_STORAGE_POINTER();
+#define constant ownerCount = FREE_STORAGE_POINTER();
+#define constant threshold = FREE_STORAGE_POINTER();
+
+//EVENTS
+#define event AddedOwner(address indexed);
+#define event RemovedOwner(address indexed);
+#define event ChangedThreshold(uint256);
+
+/**INTERFACES**/
+#define function setupOwners(address, uint256)
+#define function addOwnerWithThreshold(address,uint256)
+#define function removeOwner(address, address, uint256)
+#define function swapOwner(address, address,address)
+#define function changeThreshold(uint256);
+#define function getThreshold() view returns(uint256)
+#define function isOwner(address) view returns(bool)
+#define function getOwners() view returns (address[])
+

@@ -7,7 +7,7 @@
 #include "./Executor.huff"
 
 /**STORAGE**/
-#define constant SENTINEL_MODULES = 0X1;
+#define constant SENTINEL_MODULES = 0x1;
 
 #define constant modules = FREE_STORAGE_POINTER()
 
