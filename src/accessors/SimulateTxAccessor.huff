@@ -27,7 +27,7 @@
   sstore                //[]
 }
 
-#define macro simulate() =  takes(4) returns(3) {
+#define macro SIMULATE() =  takes(4) returns(3) {
     0NLY_DELEGATE_CALL()   //[]
     //input stack:         //[to]
     //input stack:         //[operation,data,value,to]

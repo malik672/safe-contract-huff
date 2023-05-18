@@ -51,8 +51,9 @@
      0x00 eq TRUES                    //[TRUESPC, address_to]
      jumpi  
        0x4753313032 0x00 mstore       //[address_to]
-       0x20 0x00 revert               //[address_to]
-       pop
+       pop                            //[]
+       0x20 0x00 revert               //[]
+       
 
        TRUES:
         [modules] 0x00 mstore         //[address_to]
@@ -73,8 +74,9 @@
 
       TRUE:
         0x4753313032 0x00 mstore      //[address_to]
-        0x20 0x00 revert              //[address_to]
         pop                           //[]
+        0x20 0x00 revert              //[]
+       
 }
 
 /**
@@ -97,9 +99,10 @@
       dup2 0x20 mstore               //[address_module,address_prevModule]
       0x40 0x00 sha3                 //[slot,address_module,address_prevModule]
       sload dup2 eq TRUES jumpi      //[address_module,address_prevModule]  
-        0x4753313033 0x00 mstore     //[address_module,address_prevModule]  
-        0x20 0x00 revert             //[address_module,address_prevModule] 
-        pop pop                      //[] 
+        0x4753313033 0x00 mstore     //[address_module,address_prevModule]
+        pop pop                      //[]   
+        0x20 0x00 revert             //[] 
+        
 
         TRUES:
           [modules] 0x00 mstore      //[address_module,address_prevModule]
@@ -114,9 +117,29 @@
           0x40 0x00 sha3             //[slot,address_module,address_prevModule]
           0x00 swap1 sstore          //[address_module,address_prevModule]
           emitDisabledModule(0x20)   //[address_prevModule]
-          pop
-          
-
-
-
+          pop                        //[]
 }
+
+#define macro EXECTRANSACTIONFROMMODULE() takes(4) returns(1) {
+  //input stack                      //[address_to]
+  //input stack                      //[uint256_value,address_to]
+  //input stack                      //[ptr_bytes,uint256_value,address_to]
+  //input stack                      //[uint8_enum,ptr_bytes,uint256_value,address_to]
+  [SENTINEL_MODULES] sload caller eq //[caller,loaded_value,uint8_enum,ptr_bytes,uint256_value,address_to]
+  not [modules] 0x60 mstore          //[eq_result,uint8_enum,ptr_bytes,uint256_value,address_to]
+  caller 0x80 mstore 0x40 0x60 sha3  //[slot,eq_result,uint8_enum,ptr_bytes,uint256_value,address_to]
+  sload 0x00 eq not and SUCCESS jumpi//[uint8_enum,ptr_bytes,uint256_value,address_to]
+    0x4753313034 0x60 mstore           //[uint8_enum,ptr_bytes,uint256_value,address_to]
+    pop pop pop pop                    //[]
+    0x20 0x60 revert                   //[]
+
+    SUCCESS:
+     0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF //[max_uint256,uint8_enum,ptr_bytes,uint256_value,address_to]
+     swap4 swap1 swap3 swap1                                            //[address_to,uint256_value,ptr_bytes,uint8_operation,uint256_max]
+     call                                                               //[call_result]
+     0x01 eq TRUE jumpi                                                 //[]
+     caller emitExecutionFromModuleFailure(0x20)                        //[]
+
+      TRUE:
+       caller emitExecutionFromModuleSuccess(0x20)                      //[]
+} 

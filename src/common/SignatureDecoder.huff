@@ -8,7 +8,7 @@
 
 /**FUNCTIONS**/
 /// @dev 
-#define macro SignatureDecoder() = takes(2) returns(3) {
+#define macro SIGNATUREDECODER() = takes(2) returns(3) {
    //input stack:        //[bytes32_sigs]
    //input stack:        //[uint256, bytes32_sigs]
    0x41 mul              //[signature_pos,bytes32_sigs]

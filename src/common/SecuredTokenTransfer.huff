@@ -48,7 +48,7 @@
         0x00 0x20 return     //[]
 
     CASE1:
-        swap2                // [call_result, data_size]
+        swap1                // [call_result, data_size]
         0x00 mstore          // [data_size]
         pop                  // []
         0x00 0x20 return     // []
