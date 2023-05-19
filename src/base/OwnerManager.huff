@@ -17,7 +17,7 @@
 #define event ChangedThreshold(uint256);
 
 /**INTERFACES**/
-#define function setupOwners(address, uint256)
+#define function setupOwners(address[], uint256)
 #define function addOwnerWithThreshold(address,uint256)
 #define function removeOwner(address, address, uint256)
 #define function swapOwner(address, address,address)
@@ -26,3 +26,49 @@
 #define function isOwner(address) view returns(bool)
 #define function getOwners() view returns (address[])
 
+/**
+  * @notice Sets the initial storage of the contract.
+  * @param _owners List of Safe owners.
+  * @param _threshold Number of required confirmations for a Safe transaction.
+*/
+#define macro SETUPOWNERS() takes(2) returns(0) {
+  //ptr mem points to the location of address in memory
+  //input stack                           //[ptr_mem]
+  //input stack                           //[threshold,ptr_mem]
+  [threshold] sload 0x00 eq               //[eq_result,threshold,ptr_mem]
+  GS200 jumpi                             //[threshold,ptr_mem]
+  0x4753323030 0x00 mstore                //[threshold,ptr_mem]
+  pop pop                                 //[]
+  0x05 0x00 revert                        //[]
+   
+  GS200:
+    swap1 dup1 mload                      //[length,threshold,ptr_mem]
+    dup2 dup2 eq swap1                    //[length,eq_result,threshold,ptr_mem]
+    dup3 lt or GS201 jumpi                //[threshold,ptr_mem]
+    0x4753323031 0x00 mstore              //[threshold,ptr_mem]
+    pop pop
+    0x05 0x00 revert                      //[]
+
+  GS201:
+    dup1 0x01 eq                          //[eq_result,threshold,ptr_mem]
+    0x01 dup3 eq or GS202 jumpi           //[threshold,ptr_mem]
+    0x4753323032 0x00 mstore              //[threshold,ptr_mem]
+    pop pop
+    0x05 0x00 revert                      //[]
+
+  GS202:
+    // Initializing Safe owners.
+    [SENTINEL_OWNERS] sload [owners]            //[threshold,ptr_mem]
+    0x00 dup3 lt LOOP jumpi                     //[threshold,ptr_mem]
+
+    LOOP:
+      0x00 dup1 mload 0x20 mul 0x20 add mload   //[owner, index_i,threshold,ptr_mem]
+      dup1 0x00 eq not dup2 [SENTINEL_OWNERS]   //[slot,owner,eq_result,owner,index_i,threshold,ptr_mem]
+      sload dup1 eq not dup4 address eq not     //[eq_result,eq_result,current_address, eq_result,owner,index_i,threshold,ptr_mem]
+      dup5 dup4 eq not and and swap2 swap3      //[eq_result,eq_result,current_address,owner,index_i,threshold,ptr_mem]
+      and                                       //[eq_result]
+      
+ 
+
+
+}
