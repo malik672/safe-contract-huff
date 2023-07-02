@@ -1,0 +1,17 @@
+/// @title  DebugTransactionGuard.
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev       
+/// @notice DebugTransactionGuard - implementation in huff
+
+// Imports
+#include "../../base/GuardManager.huff";
+#include "../../Safe.huff";
+
+/**
+ * @title Debug Transaction Guard - Emits transaction events with extended information.
+ * @dev This guard is only meant as a development tool and example
+ * @author Aremu Malik
+ */
+
+/**INTERFACES**/
+#define event TransactionDetails(address indexed, bytes32 indexed, address, uint256, bytes, 0, uint256, bool, uint256, bytes, address)

@@ -1,10 +1,11 @@
+************************************************************************************
 /// @title  Migration - Migrates a Safe contract from 1.3.0 to 1.2.0
 /// @notice SPDX-License-Identifier: MIT
 /// @author Malik_dev /      
 /// @notice Migrate_1_3_0_to_1_2_0-huff implementation in huff
 
  /**INTERFACES**/
-#define event  migrate() returns()
+#define event  migrate()
 
 
 /**IMMUTABLES OFFSET**/
@@ -24,8 +25,16 @@
 
 ///@notice Constructor
 ///@notice Sets the initial domain seperator and chain ID
-#define macro CONSTRUCTOR() = takes(1) returns (0) {
-   
+#define macro CONSTRUCTOR() = takes(0) returns (0) {
+   //target singleton
+   // This constructor will return the runtime bytecode with all the 
+   // constructor arguments concatenated at the end.
+
+   // Copy the runtime bytecode with constructor argument concatenated.
+    0x20                        // [size] - byte size to copy
+    0x20 codesize sub           // [offset, size] - offset in the code to copy from
+    returndatasize              // [return_offset, offset, size]
+    codecopy
 }
 
 /// @notice Retrives an "immutable" from the runtime bytecode.
