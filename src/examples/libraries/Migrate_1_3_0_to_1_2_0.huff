@@ -5,7 +5,7 @@
 /// @notice Migrate_1_3_0_to_1_2_0-huff implementation in huff
 
  /**INTERFACES**/
-#define event  migrate()
+#define function   migrate()
 
 
 /**IMMUTABLES OFFSET**/

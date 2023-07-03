@@ -1,3 +1,4 @@
+**********************************************************************************************
 /// @title  DebugTransactionGuard.
 /// @notice SPDX-License-Identifier: MIT
 /// @author Malik_dev       
@@ -14,4 +15,18 @@
  */
 
 /**INTERFACES**/
-#define event TransactionDetails(address indexed, bytes32 indexed, address, uint256, bytes, 0, uint256, bool, uint256, bytes, address)
+#define function checkFunction(address, uint256, bytes, uint8, uint256, uint256, uint256, address, address, bytes, address)
+#define function checkAfterExecution(bytes32, bool)
+
+/**EVENTS**/
+#define event TransactionDetails(address indexed, bytes32 indexed, address, uint256, bytes, uint8, uint256, bool, uint256, bytes, address)
+#define event GasUsage(address indexed, bytes32 indexed, uint256 indexed, bool )
+
+/**STORAGE**/
+#define constant txNonces = FREE_STORAGE_POINTER()
+
+
+#define macro CHECKFUNCTION = takes(11) returns(0) {
+   //Input Stack: [address_exec, bytes_offset, uint_nonce,bool_refund, uint256_safeTx, enum, bytes_data, uint256_val, address_to, bytes32_hash, address_safe]
+   
+}
