@@ -8,7 +8,7 @@
 
 /**INTERFACES**/
 #define function setGuard(address) returns ()
-#define function setGuard(address) view returns (address)
+#define function getGuard(address) view returns ()
 
 /**EVENTS**/
 #define event ChangedGuard(address indexed)
@@ -42,4 +42,9 @@
     REVERT:
       0x4753333030 0x00 mstore //[]
       0x20 0x00 revert         //[]
+}
+
+#define marco GETGUARD() = takes(1) returns(0) {
+  [GUARD_STORAGE_SLOT]   //[GUARD_ADDRESS]
+  sload
 }
