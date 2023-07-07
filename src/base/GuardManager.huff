@@ -18,8 +18,28 @@
 
 #define macro SETGUARD() = takes(1) returns(0) {
   SELFAUTHORIZED();
-  //input stack:         //[address_guard]
-  0x00                   //[address(0), address_guard]   
-  eq EQUAL               //[]
+  //input stack:               //[address_guard]
+  dup1, 0x00                   //[address(0), address_guard, address_guard]   
+  eq EQUAL                     //[address_guard]
+  0x00 0xe29e2116 mstore       //[address_guard]
+  0x20 0xe6d7a83a mstore       //[address_guard]
+  0x00 0x00 0x24 0x12          //[0x12, 0x24, 0x00, 0x00, address_guard]
+  dup5 gas staticcall          //[result, address_guard]
+  0x00 eq REVERT dup1          //[address_guard,address_guard]
+  [GUARD_STORAGE_SLOT]         //[var_slot, address_guard, address_guard]
+  sstore                       //[address_guard]
+  _EVENT_HASH(ChangedGuard)    //[sig, address_guard]
+  0x00 0x00 log2               //[]
   
+
+  EQUAL:
+    dup1                       //[address_guard, address_guard]
+    [GUARD_STORAGE_SLOT]       //[var_slot, address_guard, address_guard]
+    sstore                     //[address_guard]
+    _EVENT_HASH(ChangedGuard)  //[sig, address_guard]
+    0x00 0x00 log2             //[]
+     
+    REVERT:
+      0x4753333030 0x00 mstore //[]
+      0x20 0x00 revert         //[]
 }
