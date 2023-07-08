@@ -13,8 +13,12 @@
 
 
 /**                                                         CONSTANTS                                                                              **/
-#define constant VERSION = "1.4.0"
+#define constant VERSION = "1.4.0";
+
+//keccak256("EIP712Domain(uint256 chainId,address verifyingContract)"// );
 #define constant DOMAIN_SEPERATOR_TYPEHASH = 0x47e79534a245952e8b16893a336b85a3d9ea9fa8c573f3d803afb92a79469218
+
+// keccak256("SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)");
 #define constant SAFE_TX_TYPEHASH = 0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8;
 
 /**                                                         STORAGES                                                                                **/
@@ -22,6 +26,7 @@
 #define constant _deprecatedDomainSeperator = FREE_STORAGE_POINTER()
 #define constant signedMessages = FREE_STORAGE_POINTER()
 #define constant approvedHashes = FREE_STORAGE_POINTER()
+#define constant threshold = 1;
 
 /**                                                              EVENTS                                                                             **/
 #define event SafeSetup(address indexed initiator, address[] owners, uint256 threshold, address initializer, address fallbackHandler)
@@ -44,7 +49,10 @@
 
 /// @notice Constructor
 #define macro CONSTRUCTOR() =  takes() returns() {
-   0x20     //[size] - byte size to copy 
-   0x20 codesize sub //[offset, size] - oofset in the code to copy from
-   0x00 
+
+}
+
+#define macro SETUP() = takes(8) returns(0) {
+   //input stack                            //[address_r, uint_p, address_t, address_back, calldata_data, address_to, calldata_owners]
+   
 }
