@@ -6,7 +6,7 @@
  /**INTERFACES**/
 #define function  transferToken(address, address, uint256) payable returns()
 
-#define TRANSFERTOKEN() takes(3) returns(0) {
+#define macro TRANSFERTOKEN() = takes(3) returns(0) {
     // Input Stack:          // [address_token]
     // Input Stack:          // [address_receiver, address_token]
     // Input stack:          // [uint256_amount,address_receiver, address_token]

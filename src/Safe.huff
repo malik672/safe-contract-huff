@@ -6,9 +6,11 @@
 /// @notice All Enum params were replaced by uint8, they are both represented by 1 and 2, 1 for call and 2 for delegate call 
 
 /**                                                         IMPORTS                                                                                **/
-#include "./base/ModuleManager.huff"
-#include "./base/OwnerManager.huff"
-#include "./base/FallbackManager.huff"
+#include "./base/ModuleManager.huff";
+#include "./base/OwnerManager.huff";
+#include "./base/FallbackManager.huff";
+#include "./base/GuardManager.sol";
+
 
 /**                                                         CONSTANTS                                                                              **/
 #define constant VERSION = "1.4.0"

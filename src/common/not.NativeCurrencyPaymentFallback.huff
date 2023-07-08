@@ -5,3 +5,8 @@
 
  /**INTERFACES**/
 #define event  NativeCurrencyPaymentFallback() payable returns()
+
+
+#define macro  =  takes(0) returns(0) {
+
+}

@@ -3,4 +3,6 @@
 /// @author Malik_dev                 
 /// @notice Singleton Implementation in Huff
 
+    // singleton always has to be the first declared variable to ensure the same location as in the Proxy contract.
+    // It should also always be ensured the address is stored alone (uses a full word)
 #define constant singleton = FREE_STORAGE_POINTER()

@@ -1,0 +1,60 @@
+/// @title A generic base huff contract that allows callers to access all internal storage.
+/// @notice SPDX-License-Identifier: MIT
+/// @author Malik_dev                 
+/// @notice See https://github.com/safe-global/safe-contracts/blob/main/contracts/external/SafeMath.sol
+
+ /**INTERFACES**/
+#define function mul(uint, uint) view returns(uint)
+#define function sub(uint, uint) view returns(uint)
+#define function add(uint, uint) view returns(uint)
+#define function max(uint, uint) view returns(uint)
+
+#define macro MUL() = takes(2) returns(1) {
+  //INPUT STACK                      //[uint_b,uint_a]
+  dup2 iszero ZERO                   //[uint_b,uint_a]
+  dup2 dup2 mul                      //[uint_c, uint_b, uint_a]
+  dup1 dup4 div dup2 eq EQUAL        //[uint_c, uint_b, uint_a]
+  pop pop pop                        //[]
+  0x00 0x00 revert                   //[]
+
+  ZERO:                              //[]
+   0X00                              //[0x00]
+
+  EQUAL:                             //[uint_c, uint_b, uint_a]
+   swap2                             //[uint_a, uint_b, uint_c]
+   pop pop                           //[uint_c]
+} 
+
+
+#define macro SUB() = takes(2) returns(1) {
+  //INPUT STACK                      //[uint_b, uint_a]
+  dup2 dup2 dup2 dup2 lt swap2 eq or //[result, uint_b, uint_a]
+  SUCCESS                            //[uint_b, uint_a]
+  pop pop                            //[]
+  0x00 0x00 revert                   //[]
+  
+
+  SUCCESS:
+   sub                               //[uint_c]
+}
+
+#define macro ADD() = takes(2) returns(1) {
+  //INPUT STACK                      //[uint_b, uint_a]
+  dup2 add                           //[uint_c, uint_a]
+  dup2 dup2 dup2 dup2 lt swap2 eq or //[result, uint_c, uint_a]
+  SUCCESS
+  pop pop                            //[]
+  0x00 0x00 revert                   //[]
+  
+  SUCCESS:
+   swap1 pop                         //[uint_c]
+}
+
+#define macro MAX() = takes(2) returns(1) {
+  //INPUT STACK                      //[uint_b, uint_a]
+  dup2 dup2 gt SUCCESS               //[uint_b, uint_a]
+  swap1 pop                          //[uint_b]
+
+  SUCEESS:
+  pop                                //[uint_a]
+}
